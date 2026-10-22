@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Yung Willis | 07.25 Celebration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Space+Grotesk:wght@600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #090a10;
+      --card-bg: rgba(22, 24, 38, 0.75);
+      --gold: #f59e0b;
+      --gold-glow: #fbbf24;
+      --purple: #8b5cf6;
+      --cyan: #06b6d4;
+      --pink: #ec4899;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.09);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* Ambient Glow background */
+    .glow-sphere {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .glow-1 { top: -80px; left: -60px; width: 450px; height: 450px; background: var(--gold); }
+    .glow-2 { top: 35%; right: -80px; width: 420px; height: 420px; background: var(--purple); }
+    .glow-3 { bottom: -50px; left: 25%; width: 500px; height: 450px; background: var(--cyan); }
+
+    /* Floating Lyrics Layer */
+    #lyric-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      overflow: hidden;
+    }
+
+    .floating-lyric {
+      position: absolute;
+      background: rgba(18, 18, 30, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      animation: popAndFloat 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .song-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+    .tag-givin { background: rgba(245, 158, 11, 0.2); color: var(--gold-glow); border: 1px solid var(--gold); }
+    .tag-happy { background: rgba(6, 182, 212, 0.2); color: var(--cyan); border: 1px solid var(--cyan); }
+
+    @keyframes popAndFloat {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.85);
+      }
+      15% {
+        opacity: 1;
+        transform: translateY(0) scale(1.05);
+      }
+      30% {
+        transform: translateY(-8px) scale(1);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(-50px);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-90px) scale(0.9);
+      }
+    }
+
+    /* Navigation Bar */
+    header {
+      padding: 1.1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 10, 16, 0.85);
+    }
+
+    .brand-pill {
+      background: linear-gradient(135deg, var(--gold), #ea580c);
+      color: #000;
+      font-weight: 900;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #f97316);
+      color: #000;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: #fff;
+    }
+
+    .toggle-lyrics-btn {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .toggle-lyrics-btn.active {
+      border-color: var(--gold);
+      color: #fff;
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .bday-badge {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--gold-glow);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.35rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(to right, #ffffff, #e5e7eb, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    /* Interactive DJ Hype Soundboard */
+    .soundboard {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      backdrop-filter: blur(14px);
+      margin-bottom: 3.5rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+
+    .pads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .pad-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      color: white;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .pad-btn span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .pad-btn:active, .pad-btn.active {
+      transform: scale(0.96);
+      background: var(--purple);
+      border-color: #fff;
+      box-shadow: 0 0 25px var(--purple);
+    }
+
+    /* Hall of Fame / Squad Highlights */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .highlight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .highlight-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+    }
+    .highlight-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.4rem;
+    }
+    .highlight-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Guestbook / Birthday Messages */
+    .guestbook-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .guestbook-layout { grid-template-columns: 1fr; }
+    }
+
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      height: fit-content;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .form-control {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-family: inherit;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .wishes-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+    }
+    .wish-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .wish-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .wish-name {
+      font-weight: 700;
+      color: var(--gold-glow);
+    }
+    .wish-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--text-muted);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Lyrics Canvas Container -->
+  <div id="lyric-container"></div>
+
+  <!-- Ambient Glowing Orbs -->
+  <div class="glow-sphere glow-1"></div>
+  <div class="glow-sphere glow-2"></div>
+  <div class="glow-sphere glow-3"></div>
+
+  <!-- Top Navbar -->
+  <header>
+    <div class="brand-pill">Yung Willis • 07/25 🦁</div>
+    <div class="header-actions">
+      <button id="toggleLyricsBtn" class="btn toggle-lyrics-btn active" onclick="toggleLyrics()">
+        <span>🎵</span> Lyrics: ON
+      </button>
+      <a href="https://api.whatsapp.com/send?text=Happy%20Birthday%20Yung%20Willis!%20Check%20out%20the%2007/25%20birthday%20celebration%20page!%20🎉" 
+         target="_blank" 
+         class="btn btn-whatsapp">
+        <span>📲</span> Share
+      </a>
+      <button class="btn btn-gold" onclick="copySiteLink()">
+        <span>🔗</span> Copy Link
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="bday-badge">♌ JULY 25 • CHAPTER 0725</div>
+    <h1>HAPPY BIRTHDAY,<br>YUNG WILLIS! 👑🎂</h1>
+    <p>Honoring the legend on 07/25. May this year bring endless wins, blessings, and non-stop celebration!</p>
+    
+    <div class="hero-btn-group">
+      <button class="btn btn-gold" onclick="popChampagne()">
+        🍾 Pop Champagne & Confetti
+      </button>
+      <button class="btn" style="background: rgba(255,255,255,0.08); color: #fff;" onclick="spawnRandomLyric()">
+        💬 Drop a Lyric
+      </button>
+      <a href="#guestbook" class="btn" style="background: rgba(255,255,255,0.08); color: #fff;">
+        ✍️ Sign Wish Wall
+      </a>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Interactive Sound Pad -->
+    <section class="soundboard">
+      <h2 class="section-title">🔊 Party Hype Soundboard</h2>
+      <p class="section-subtitle">Click the pads or hit keyboard keys (1–4) to play beats and trigger lyrics!</p>
+      
+      <div class="pads-grid">
+        <button class="pad-btn" onclick="playSynthTune(150, 'triangle', this)" data-key="1">
+          🥁 Heavy Sub
+          <span>Press [1]</span>
+        </button>
+        <button class="pad-btn" onclick="playSynthTune(580, 'sine', this)" data-key="2">
+          ✨ Birthday Chime
+          <span>Press [2]</span>
+        </button>
+        <button class="pad-btn" onclick="playSynthTune(880, 'sawtooth', this)" data-key="3">
+          🎺 Airhorn Burst
+          <span>Press [3]</span>
+        </button>
+        <button class="pad-btn" onclick="shoutVoice('Willis you been givin dem!', this)" data-key="4">
+          🎤 Givin Dem Tag!
+          <span>Press [4]</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Highlights -->
+    <section>
+      <h2 class="section-title">⭐ Certified Traits of Willis</h2>
+      <p class="section-subtitle">Why 07/25 is a global holiday for the squad.</p>
+      
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <div class="card-icon">👑</div>
+          <h3>Leo Season Energy</h3>
+          <p>Born on July 25 with natural swagger, unshakeable confidence, and pure heart.</p>
+        </div>
+
+        <div class="highlight-card">
+          <div class="card-icon">🎯</div>
+          <h3>Steady Givin' Dem</h3>
+          <p>Back-to-back dedication. Always leveling up and lifting the whole crew with him.</p>
+        </div>
+
+        <div class="highlight-card">
+          <div class="card-icon">🔥</div>
+          <h3>Me I Want to Jaiye</h3>
+          <p>Living life with no complication, good vibes only, and 100% positive energy.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guestbook Section -->
+    <section id="guestbook">
+      <h2 class="section-title">💌 The 07/25 Birthday Wall</h2>
+      <p class="section-subtitle">Drop your birthday message to Yung Willis!</p>
+      
+      <div class="guestbook-layout">
+        <div class="form-card">
+          <form onsubmit="postBirthdayWish(event)">
+            <div class="form-group">
+              <label for="authorName">Your Name / Nickname</label>
+              <input type="text" id="authorName" class="form-control" placeholder="e.g. Jordan / Bro" required />
+            </div>
+            <div class="form-group">
+              <label for="authorMessage">Your Birthday Message</label>
+              <textarea id="authorMessage" rows="4" class="form-control" placeholder="Wish Yung Willis good health, long life, and more wins..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold" style="width: 100%; justify-content: center;">
+              Post Shoutout 🚀
+            </button>
+          </form>
+        </div>
+
+        <div class="wishes-feed" id="wishesFeed">
+          <div class="wish-item">
+            <div class="wish-header">
+              <span class="wish-name">The Day 1 Squad</span>
+              <span class="wish-time">Today</span>
+            </div>
+            <p>"More life, more wins, and endless blessings to Yung Willis on 07/25! Have a massive year bro!"</p>
+          </div>
+          <div class="wish-item">
+            <div class="wish-header">
+              <span class="wish-name">Family & Crew</span>
+              <span class="wish-time">Today</span>
+            </div>
+            <p>"Happy July 25th birthday to the one and only! May this year bring your biggest breakthroughs yet!"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Celebrating <strong>Yung Willis (07/25)</strong> • "Wi-Wi-Willis Give Dem!"</p>
+    <p style="font-size: 0.85rem; margin-top: 0.35rem; color: #6b7280;">Made with ❤️ by your people</p>
+  </footer>
+
+  <script>
+    // Lyric Pool from "Happy" and "Givin Dem"
+    const lyricsList = [
+      // From "Happy" (ft. Mr Eazi)
+      { song: "Happy", tagClass: "tag-happy", text: "Me I want to Jaiye, me I want to party! 🥂" },
+      { song: "Happy", tagClass: "tag-happy", text: "Me I want to have some fun, me I want to be Happy! ✨" },
+      { song: "Happy", tagClass: "tag-happy", text: "Happiness is all I need! ☀️" },
+      { song: "Happy", tagClass: "tag-happy", text: "As I wake up in the morning I feel blessed, I no dey stress 🙏" },
+      { song: "Happy", tagClass: "tag-happy", text: "Life is simple, no complication! 🌴" },
+      
+      // From "Givin Dem" (ft. Timaya & Kabusa Oriental Choir)
+      { song: "Givin Dem", tagClass: "tag-givin", text: "Willis, you've been Givin Dem! Oh yes! 🔥" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "Wetin you wan give us again?! 🔊" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "The boy bad bad bad, the boy choke! 💥" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "Back to back you givin dem! 🎶" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "International & local! 🌍" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "Wi-Wi-Willis Give Dem! ⚡" },
+      { song: "Givin Dem", tagClass: "tag-givin", text: "Any jam wey you drop, dem jammin them! 🎧" }
+    ];
+
+    let lyricsActive = true;
+    let lyricInterval = null;
+
+    function spawnRandomLyric() {
+      const container = document.getElementById('lyric-container');
+      const item = lyricsList[Math.floor(Math.random() * lyricsList.length)];
+
+      const el = document.createElement('div');
+      el.className = 'floating-lyric';
+
+      // Random position across the screen
+      const minX = 8;
+      const maxX = 70;
+      const minY = 20;
+      const maxY = 75;
+
+      const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+      const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+
+      el.style.left = `${randomX}%`;
+      el.style.top = `${randomY}%`;
+
+      el.innerHTML = `
+        <span class="song-tag ${item.tagClass}">${item.song}</span>
+        <span>${item.text}</span>
+      `;
+
+      container.appendChild(el);
+
+      // Remove after animation finishes
+      setTimeout(() => {
+        el.remove();
+      }, 4500);
+    }
+
+    // Auto-pop every 3.2 seconds
+    function startLyricsEngine() {
+      lyricInterval = setInterval(() => {
+        if (lyricsActive) spawnRandomLyric();
+      }, 3200);
+    }
+
+    function toggleLyrics() {
+      lyricsActive = !lyricsActive;
+      const btn = document.getElementById('toggleLyricsBtn');
+      if (lyricsActive) {
+        btn.classList.add('active');
+        btn.innerHTML = `<span>🎵</span> Lyrics: ON`;
+        spawnRandomLyric();
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = `<span>🔇</span> Lyrics: OFF`;
+      }
+    }
+
+    // Copy Link function
+    function copySiteLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert("🎉 Link copied to clipboard! Paste it to your friends on WhatsApp or Instagram.");
+      }).catch(() => {
+        prompt("Copy this link to share with friends:", window.location.href);
+      });
+    }
+
+    // Audio Synthesizer
+    let audioCtx = null;
+    function getAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playSynthTune(freq, wave, btn) {
+      try {
+        const ctx = getAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = wave;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + 0.35);
+
+        gain.gain.setValueAtTime(0.9, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.36);
+
+        if (btn) {
+          btn.classList.add('active');
+          setTimeout(() => btn.classList.remove('active'), 150);
+        }
+        spawnRandomLyric();
+      } catch (err) {}
+    }
+
+    function shoutVoice(text, btn) {
+      if ('speechSynthesis' in window) {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.pitch = 1.25;
+        speech.rate = 1.1;
+        window.speechSynthesis.speak(speech);
+      }
+      if (btn) {
+        btn.classList.add('active');
+        setTimeout(() => btn.classList.remove('active'), 250);
+      }
+      spawnRandomLyric();
+    }
+
+    // Keyboard Hotkeys
+    window.addEventListener('keydown', (e) => {
+      const pad = document.querySelector(`.pad-btn[data-key="${e.key}"]`);
+      if (pad) pad.click();
+    });
+
+    // Confetti Fireworks Blaster
+    function popChampagne() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#f59e0b', '#8b5cf6', '#06b6d4', '#ea580c', '#ffffff']
+        });
+        setTimeout(() => {
+          confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0 } });
+          confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1 } });
+        }, 200);
+      }
+      spawnRandomLyric();
+    }
+
+    // Guestbook Post Handler
+    function postBirthdayWish(e) {
+      e.preventDefault();
+      const name = document.getElementById('authorName').value;
+      const msg = document.getElementById('authorMessage').value;
+      const feed = document.getElementById('wishesFeed');
+
+      const card = document.createElement('div');
+      card.className = 'wish-item';
+      card.innerHTML = `
+        <div class="wish-header">
+          <span class="wish-name">${escapeTxt(name)}</span>
+          <span class="wish-time">Just now</span>
+        </div>
+        <p>"${escapeTxt(msg)}"</p>
+      `;
+
+      feed.prepend(card);
+      popChampagne();
+
+      document.getElementById('authorName').value = '';
+      document.getElementById('authorMessage').value = '';
+    }
+
+    function escapeTxt(str) {
+      return str.replace(/[&<>'"]/g, 
+        t => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[t] || t)
+      );
+    }
+
+    // Initialize automatically
+    window.addEventListener('load', () => {
+      setTimeout(popChampagne, 400);
+      setTimeout(spawnRandomLyric, 1200);
+      startLyricsEngine();
+    });
+  </script>
+</body>
+</html>
